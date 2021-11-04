@@ -1,6 +1,6 @@
-# 第三天 typescript的Function进阶
+# 第三天 typescript 的 Function 进阶
 
-> function相关的东西有很多细碎的内容，比如像this绑定、可选参数、Rest Parameters之类的有很多是没有写的
+> function 相关的东西有很多细碎的内容，比如像 this 绑定、可选参数、Rest Parameters 之类的有很多是没有写的
 
 ## Function Type Expressions 函数类型表达式
 
@@ -22,7 +22,7 @@ greeter(printToConsole);
 
 ## Call Signatures 呼叫签名
 
-我们都知道函数其实也是对象，可以在上面挂载属性，如果我们想在typescript里实现这个效果，可以这样写
+我们都知道函数其实也是对象，可以在上面挂载属性，如果我们想在 typescript 里实现这个效果，可以这样写
 
 ```typescript
 type DescribableFunction = {
@@ -44,7 +44,7 @@ doSomething(d);
 
 这里和上面的**function type expression**略有一点不同，就是`DescribableFunction`中的函数定义我们用的是`:`而不是`=>`
 
-## Construct Signatures构造签名
+## Construct Signatures 构造签名
 
 如果我们传入的参数是一个构造函数呢，也就是类
 
@@ -71,7 +71,7 @@ const a = Obj;
 fn(a);
 ```
 
-## Generic Functions通用函数
+## Generic Functions 通用函数
 
 ```typescript
 function id(arg: any): any {
@@ -81,11 +81,11 @@ function id(arg: any): any {
 
 如果我们写出了这样的一个函数，看似结果是一定的，但是如果这时候对`arg`进行一些类型转换等等的操作的话，最后返回的值和我们一开始传入的类型是没关系的，再用`any`的时候我们丢失了太多的信息
 
-所以typescript这里给我们提供了一个方案解决，就是用泛型
+所以 typescript 这里给我们提供了一个方案解决，就是用泛型
 
 ```typescript
 function id<T>(arg: T): T {
-    return arg;
+  return arg;
 }
 ```
 
@@ -98,7 +98,7 @@ const a1 = id(1);
 const a2 = id<string>("1");
 ```
 
-### Constraints约束
+### Constraints 约束
 
 泛型很好，既保留了想要的类型信息，又显得更加通用，但有时候我们还是想做出点约束的
 
@@ -114,7 +114,7 @@ function longest<Type extends { length: number }>(a: Type, b: Type) {
 
 很明显，我们就是想让传进来的这俩能有个`length`属性，这就做到了泛型的约束效果
 
-### Specifying Type Arguments指定类型参数
+### Specifying Type Arguments 指定类型参数
 
 有时候太过奔放的使用泛型也是可能犯错的，要时刻记得如果**返回类型**也是进入的类型的话，要仔细检查
 
@@ -132,17 +132,17 @@ const arr = combine([1, 2, 3], ["hello"]); //Type 'string' is not assignable to 
 
 他会报错，你一开始传进来的是`number[]`，那我推断出你最好返回的理应也是`number[]`不会有错吧，那这样一来后面的`string[]`就尴尬了，因为函数的逻辑最后会把他们拼在一起，这样子就是混合的，解决的办法也很简单
 
-那就是指定好类型，在实际的coding中也是比较推荐这样做的
+那就是指定好类型，在实际的 coding 中也是比较推荐这样做的
 
 ```typescript
 const arr = combine<string | number>([1, 2, 3], ["hello"]);
 ```
 
-## Function Overloads函数重载
+## Function Overloads 函数重载
 
 函数的重载没啥可说的，就是重写函数签名，以达到不同的逻辑，但是这里还有个小坑是需要注意的
 
-比如我们对一个函数做了两次重载操作，分别可以接受1个参数和3个参数，最后我们通过两个可选参数实现了他们，这并不意味我们可以传递两个参数
+比如我们对一个函数做了两次重载操作，分别可以接受 1 个参数和 3 个参数，最后我们通过两个可选参数实现了他们，这并不意味我们可以传递两个参数
 
 ```typescript
 function makeDate(timestamp: number): Date;
@@ -157,6 +157,4 @@ function makeDate(mOrTimestamp: number, d?: number, y?: number): Date {
 const d1 = makeDate(12345678);
 const d2 = makeDate(5, 5, 5);
 const d3 = makeDate(1, 3); // No overload expects 2 arguments, but overloads do exist that expect either 1 or 3 arguments.ts(2575)
-
 ```
-
